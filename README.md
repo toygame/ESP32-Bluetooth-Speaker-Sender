@@ -2,7 +2,7 @@
 
 🎵 **ESP32-based Bluetooth A2DP Source with Web API Control**
 
-เครื่องส่งเสียงผ่าน Bluetooth ที่ควบคุมผ่าน Web API สำหรับ ESP32 โดยใช้ไฟล์เสียง WAV จากระบบไฟล์ SPIFFS
+ESP32 Bluetooth audio transmitter that can be controlled via Web API, streaming WAV audio files from SPIFFS file system to Bluetooth speakers.
 
 ![ESP32](https://img.shields.io/badge/ESP32-Compatible-blue)
 ![PlatformIO](https://img.shields.io/badge/PlatformIO-Ready-orange)
@@ -10,20 +10,20 @@
 
 ## ✨ Features
 
-- 🎧 **Bluetooth A2DP Source** - เล่นเสียงไปยังลำโพง/หูฟัง Bluetooth
-- 🌐 **Web API Control** - ควบคุมการเล่นเสียงผ่าน HTTP API
-- 📁 **SPIFFS File System** - จัดเก็บไฟล์เสียงใน Flash memory
-- 🔄 **Smart Playback** - เล่น 1 รอบแล้วหยุดอัตโนมัติ
-- 📊 **Real-time Status** - ตรวจสอบสถานะการทำงานแบบ real-time
-- 🎛️ **Volume Control** - ปรับระดับเสียงได้
-- 💾 **Memory Optimized** - ใช้ streaming แทนการโหลดทั้งไฟล์
+- 🎧 **Bluetooth A2DP Source** - Stream audio to Bluetooth speakers/headphones
+- 🌐 **Web API Control** - Control audio playback via HTTP API
+- 📁 **SPIFFS File System** - Store audio files in Flash memory
+- 🔄 **Smart Playback** - Play once and stop automatically
+- 📊 **Real-time Status** - Monitor system status in real-time
+- 🎛️ **Volume Control** - Adjustable volume levels
+- 💾 **Memory Optimized** - Uses streaming instead of loading entire file
 
 ## 🛠️ Hardware Requirements
 
-- **ESP32 Development Board** (NodeMCU-32S หรือ compatible)
-- **WiFi Network** สำหรับ Web API
-- **Bluetooth Speaker/Headphones** รองรับ A2DP
-- **MicroSD Card** (optional สำหรับไฟล์เสียงขนาดใหญ่)
+- **ESP32 Development Board** (NodeMCU-32S or compatible)
+- **WiFi Network** for Web API access
+- **Bluetooth Speaker/Headphones** with A2DP support
+- **MicroSD Card** (optional for larger audio files)
 
 ## 📋 Audio File Requirements
 
@@ -31,7 +31,7 @@
 - **Sample Rate**: 44.1 kHz
 - **Channels**: Stereo (2 channels)
 - **Bit Depth**: 16-bit
-- **Size**: ≤ 2MB (ขึ้นอยู่กับ SPIFFS partition)
+- **Size**: ≤ 2MB (depends on SPIFFS partition)
 
 ## 🚀 Installation
 
@@ -43,15 +43,15 @@ cd ESP32-Bluetooth-Speaker-Sender
 
 ### 2. Install PlatformIO
 ```bash
-# ติดตั้ง PlatformIO CLI
+# Install PlatformIO CLI
 pip install platformio
 
-# หรือใช้ VS Code Extension
-# ค้นหา "PlatformIO IDE" ใน VS Code Extensions
+# Or use VS Code Extension
+# Search for "PlatformIO IDE" in VS Code Extensions
 ```
 
 ### 3. Configure WiFi Credentials
-แก้ไขไฟล์ `src/main.cpp`:
+Edit `src/main.cpp`:
 ```cpp
 // WiFi Configuration
 const char* ssid = "YOUR_WIFI_SSID";
@@ -59,16 +59,16 @@ const char* password = "YOUR_WIFI_PASSWORD";
 ```
 
 ### 4. Prepare Audio File
-1. วางไฟล์ `play1.wav` ในโฟลเดอร์ `data/`
-2. ตรวจสอบให้ไฟล์ตรงตาม requirements ข้างต้น
+1. Place `play1.wav` file in `data/` folder
+2. Ensure file meets the requirements above
 
 ### 5. Build & Upload
 ```bash
-# Clean และ build
+# Clean and build
 pio run --target clean
 pio run
 
-# Upload filesystem (ไฟล์เสียง)
+# Upload filesystem (audio files)
 pio run --target uploadfs
 
 # Upload firmware
@@ -80,16 +80,16 @@ pio device monitor
 
 ## 🎮 Usage
 
-### การเริ่มต้นใช้งาน
+### Getting Started
 
-1. **Power On**: เปิดเครื่อง ESP32
-2. **WiFi Connection**: รอการเชื่อมต่อ WiFi
-3. **Bluetooth Pairing**: จับคู่ลำโพง Bluetooth กับ "AL-01"
-4. **Get IP Address**: ดู IP address ใน Serial Monitor
+1. **Power On**: Turn on ESP32 device
+2. **WiFi Connection**: Wait for WiFi connection
+3. **Bluetooth Pairing**: Pair Bluetooth speaker with "AL-01"
+4. **Get IP Address**: Check IP address in Serial Monitor
 
 ### Web Interface
 
-เปิด browser ไปที่: `http://[ESP32_IP_ADDRESS]/`
+Open browser and navigate to: `http://[ESP32_IP_ADDRESS]/`
 
 ```
 ESP32 Audio Player
@@ -100,13 +100,13 @@ ESP32 Audio Player
 ## 🔗 API Endpoints
 
 ### GET `/`
-**หน้าหลัก Web Interface**
+**Main Web Interface**
 ```
 Response: HTML page with controls
 ```
 
 ### GET `/play1`
-**เล่นเสียง 1 รอบ**
+**Play audio once**
 ```bash
 curl http://192.168.1.100/play1
 ```
@@ -116,7 +116,7 @@ Response: "Audio playback started!" (200)
 ```
 
 ### GET `/status`
-**ตรวจสอบสถานะ**
+**Check system status**
 ```bash
 curl http://192.168.1.100/status
 ```
@@ -131,12 +131,12 @@ WiFi IP: 192.168.1.100
 
 | State | Description | Audio Output |
 |-------|-------------|--------------|
-| **STANDBY** | รอคำสั่ง | เสียงเงียบ |
-| **PLAYING** | กำลังเล่นเสียง | PCM audio data |
+| **STANDBY** | Waiting for commands | Silent |
+| **PLAYING** | Playing audio | PCM audio data |
 
 ### State Transitions
 ```
-STANDBY --[API /play1]--> PLAYING --[ครบ 1 รอบ]--> STANDBY
+STANDBY --[API /play1]--> PLAYING --[Complete 1 cycle]--> STANDBY
 ```
 
 ## 🔧 Configuration
@@ -171,67 +171,67 @@ WAV File (SPIFFS) → Parse Header → Extract PCM Data →
 Bluetooth A2DP → Codec (SBC) → Bluetooth Speaker
 ```
 
-1. **File Reading**: Stream แบบ real-time จาก SPIFFS
-2. **Header Parsing**: วิเคราะห์ WAV header เพื่อหา PCM data
-3. **Frame Processing**: แปลง PCM เป็น frames สำหรับ A2DP
-4. **Bluetooth Transmission**: ส่งผ่าน SBC codec
+1. **File Reading**: Real-time streaming from SPIFFS
+2. **Header Parsing**: Analyze WAV header to find PCM data
+3. **Frame Processing**: Convert PCM to frames for A2DP
+4. **Bluetooth Transmission**: Send via SBC codec
 
 ## 🐛 Troubleshooting
 
-### ปัญหาที่พบบ่อย
+### Common Issues
 
 #### 1. **Cannot connect to WiFi**
 ```
-Solution: ตรวจสอบ SSID และ password ใน src/main.cpp
+Solution: Check SSID and password in src/main.cpp
 ```
 
 #### 2. **SPIFFS Mount Failed**
 ```bash
-# Upload filesystem ใหม่
+# Re-upload filesystem
 pio run --target uploadfs
 ```
 
 #### 3. **Audio file not found**
 ```
 Solution: 
-1. ใส่ไฟล์ play1.wav ในโฟลเดอร์ data/
-2. รัน pio run --target uploadfs
+1. Place play1.wav file in data/ folder
+2. Run pio run --target uploadfs
 ```
 
 #### 4. **Bluetooth pairing failed**
 ```
 Solution:
-1. ลบ device "AL-01" ออกจากลำโพง
+1. Remove "AL-01" device from speaker
 2. Reset ESP32
-3. Pair ใหม่
+3. Pair again
 ```
 
 #### 5. **Firmware too large**
 ```
 Error: The program size (1612389 bytes) is greater than maximum allowed
 
-Solution: ใช้ partition table ที่มี app ขนาดใหญ่ขึ้น (audio_partitions.csv)
+Solution: Use partition table with larger app size (audio_partitions.csv)
 ```
 
 #### 6. **No sound output**
 ```
 Checklist:
-✓ ไฟล์เสียงเป็น 44.1kHz, 16-bit, stereo PCM
-✓ Bluetooth speaker paired และ connected
-✓ เรียก API /play1 เพื่อเริ่มเล่น
-✓ ตรวจสอบ volume level
+✓ Audio file is 44.1kHz, 16-bit, stereo PCM
+✓ Bluetooth speaker paired and connected
+✓ Call API /play1 to start playback
+✓ Check volume level
 ```
 
 ### Debug Commands
 
 ```bash
-# ดู log แบบ real-time
+# Real-time log monitoring
 pio device monitor
 
-# ตรวจสอบขนาด firmware
+# Check firmware size
 pio run --target size
 
-# ดู partition table
+# View partition table
 esptool.py --port /dev/ttyUSB0 read_flash 0x8000 0x1000 partition_table.bin
 ```
 
@@ -301,11 +301,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-หากมีปัญหาหรือข้อสงสัย:
+If you have any issues or questions:
 - 🐛 [Create an Issue](https://github.com/toygame/ESP32-Bluetooth-Speaker-Sender/issues)
 - 💬 [Discussions](https://github.com/toygame/ESP32-Bluetooth-Speaker-Sender/discussions)
 - 📧 Email: thanapon.toy@hotmail.com
 
 ---
 
-⭐ **ถ้าโปรเจคนี้มีประโยชน์ กรุณา Star ให้ด้วยนะครับ!** ⭐ 
+⭐ **If this project helps you, please give it a star!** ⭐ 
