@@ -53,12 +53,23 @@ pip install platformio
 # Search for "PlatformIO IDE" in VS Code Extensions
 ```
 
-### 3. Configure WiFi Credentials
-Edit `src/main.cpp`:
+### 3. Configure Settings
+Edit `src/main.cpp` in the setup() function:
 ```cpp
 // WiFi Configuration
-const char* ssid = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+controller.setWiFiCredentials("YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
+
+// Bluetooth Device Name
+controller.setBluetoothDeviceName("AL-01");
+
+// Audio File Path
+controller.setAudioFile("/play1.wav");
+
+// Status Update Interval (milliseconds)
+controller.setStatusUpdateInterval(10000); // 10 seconds
+
+// Initial Volume (0-100%)
+controller.setVolume(80);
 ```
 
 ### 4. Prepare Audio File
